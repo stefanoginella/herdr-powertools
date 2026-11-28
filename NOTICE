@@ -30,6 +30,12 @@ The full layout also includes Back and forward from PostHog/herdr and Quick
 Actions from dougcunha/herdr-mods. Each is distributed under its MIT license
 in the corresponding mod folder.
 
+Spotify Mini adapts the macOS notification listener from
+jeffarese/herdr-spotify. Its MIT license is included in
+packages/spotify-mini/mods/spotify-mini/LICENSE.
+The Spotify wordmark and its icon are Spotify trademarks. The player logo
+comes from https://developer.spotify.com/documentation/design.
+
 This repository also includes the icons of Material Icon Theme
 (https://github.com/material-extensions/vscode-material-icon-theme, version
 5.40.0), which is licensed under the MIT License:

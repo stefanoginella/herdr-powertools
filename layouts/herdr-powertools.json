@@ -203,6 +203,15 @@
               }
             },
             {
+              "id": "spotify-status",
+              "type": "block",
+              "content": {
+                "mod": "spotify-mini",
+                "props": { "statusBlock": "spotify-status" }
+              },
+              "size": { "px": 32 }
+            },
+            {
               "id": "back-forward",
               "type": "block",
               "content": {

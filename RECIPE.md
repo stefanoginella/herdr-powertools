@@ -17,7 +17,7 @@ Start with a 268 px left sidebar. Under the window chrome put a 62 px usage widg
 
 ## Built from
 
-Install the mod packages under `packages/`, then install `layouts/herdr-powertools.json` and merge the root `keys.json`. Follow the full install in the [README](README.md). Keep Herdr's `workspace-chrome`, its block IDs and its active-tab content. Replace the Spaces, Agents, Tabs, pane header, Status, Files and Changes mod references as shown in the layout. Add the usage block, the search child and its always-present zero-height key receiver. Register `editor-links` at the layout root. The status row includes Back and Forward and the Quick Actions launcher. The individual Power Tools recipes under `packages/` describe each part, its dependencies and its acceptance checks.
+Install the mod packages under `packages/`, then install `layouts/herdr-powertools.json` and merge the root `keys.json`. Follow the full install in the [README](README.md). Keep Herdr's `workspace-chrome`, its block IDs and its active-tab content. Replace the Spaces, Agents, Tabs, pane header, Status, Files and Changes mod references as shown in the layout. Add the usage block, the search child and its always-present zero-height key receiver. Register `editor-links` at the layout root. The status row includes Spotify Mini, Back and Forward and the Quick Actions launcher. The individual Power Tools recipes under `packages/` describe each part, its dependencies and its acceptance checks.
 
 ## Watch out
 

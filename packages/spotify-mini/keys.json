@@ -1,0 +1,11 @@
+{
+  "global": {
+    "ctrl-cmd-m": "mod.open:spotify-mini",
+    "ctrl-cmd-p": "spotify-mini.toggle",
+    "ctrl-cmd-left": "spotify-mini.previous",
+    "ctrl-cmd-right": "spotify-mini.next",
+    "ctrl-cmd-up": "spotify-mini.louder",
+    "ctrl-cmd-down": "spotify-mini.quieter",
+    "ctrl-cmd-l": "spotify-mini.like"
+  }
+}

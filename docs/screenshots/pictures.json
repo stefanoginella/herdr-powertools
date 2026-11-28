@@ -26,6 +26,13 @@
     ]
   },
   "pictures": {
+    "spotify-mini": {
+      "cards": [
+        { "src": "raw/spotify-player.png", "crop": [650, 237, 920, 936], "at": [300, 42], "scale": 0.92 },
+        { "src": "raw/spotify-bar.png", "crop": [1360, 1354, 640, 56], "at": [865, 924] },
+        { "src": "raw/spotify-paused.png", "crop": [1360, 1354, 640, 56], "at": [175, 924] }
+      ]
+    },
     "workspace-tools": {
       "cards": [
         { "src": "raw/quick-actions.png", "crop": [372, 128, 1476, 625], "at": [98, 70] },

@@ -31,6 +31,7 @@ real herdr-core >/dev/null && link herdr-core
 for p in claude codex code open osascript textedit trash; do
   printf '#!/bin/sh\nprintf "%%s\\n" "$0 $*" >>%s/stub.log\nexit 1\n' "$DEMO" > "$DEMO/bin/$p"
 done
+cp "$SHOTS/spotify-osascript.sh" "$DEMO/bin/osascript"
 cat > "$DEMO/bin/docker" <<X
 #!/bin/sh
 echo "docker \$*" >> $DEMO/stub.log

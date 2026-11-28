@@ -63,6 +63,13 @@
       {"crop": [265, 126, 1149, 797], "at": [579, 157], "width": 691}
     ]
   },
+  "spotify-mini": {
+    "caption": "Control Spotify on your Mac and open your pinned playlists.",
+    "shots": [
+      {"crop": [300, 42, 846, 861], "at": [620, 52], "width": 570},
+      {"crop": [865, 924, 640, 56], "at": [570, 669], "width": 640}
+    ]
+  },
   "file-explorer": {
     "caption": "Browse files with icons and Git status. Move, rename, or search.",
     "shots": [

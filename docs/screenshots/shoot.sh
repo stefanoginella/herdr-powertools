@@ -1,7 +1,7 @@
 #!/bin/bash
 # shoot.sh [step ...]: the raw shots the pictures are made from, each the whole window as the app
 # drew it, into the sandbox's raw/. After scene.sh. With no step named, all of them, in this order:
-#   diff editor guides files search goto git sidebar window usage review ci tools
+#   diff editor guides files search goto git sidebar window usage review ci tools spotify
 # A step sets the zoom and the panels it needs. The crop boxes in pictures.json are in these shots'
 # pixels: a step that changes a zoom, a panel's width or a pane's place moves them.
 . "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
@@ -166,7 +166,33 @@ s_tools() {
   h space.select "{\"id\":\"$S1\"}"; h tab.select "{\"id\":\"$T1\"}"
 }
 
-steps=("$@"); [ ${#steps[@]} -gt 0 ] || steps=(diff editor guides files search goto git sidebar window usage review ci tools)
+s_spotify() {
+  zoom 2
+  mkdir -p "$A/data/spotify-mini/art"
+  # The requested 5:34 Stray Feathers recording and its public Spotify artwork.
+  local art=ab67616d00001e02f776eb6971a41f5a4e969c77
+  local cover="$A/data/spotify-mini/art/$art.jpg"
+  if [ ! -s "$cover" ]; then
+    curl -fsSL --max-time 20 --retry 2 "https://image-cdn-ak.spotifycdn.com/image/$art" -o "$cover.part" &&
+      mv "$cover.part" "$cover" || return 1
+  fi
+  printf '%s\n' '[{"id":"1111111111111111111111","name":"Quiet mornings"},{"id":"2222222222222222222222","name":"After hours"}]' > "$A/data/spotify-mini/playlists.json"
+  printf '{"ok":true,"running":true,"playing":true,"volume":60,"track":{"id":"spotify:track:1gWKIOySPIvxvV3GwGA5Rf","title":"Stargazer","artist":"Bird of Prey","album":"Stray Feathers","position":84,"duration":334.647,"art":"https://i.scdn.co/image/%s"}}\n' "$art" > "$A/data/spotify-demo.json"
+  nap 3; shot spotify-bar
+  h mod.open '{"name":"spotify-mini"}'; draw 3; shot spotify-player
+  h overlay.close
+  py - "$A/data/spotify-demo.json" <<'PY'
+import json, sys
+p = sys.argv[1]
+with open(p) as f: state = json.load(f)
+state["playing"] = False
+with open(p, "w") as f: json.dump(state, f)
+PY
+  nap 3; shot spotify-paused
+  printf '%s\n' '{"ok":true,"running":false}' > "$A/data/spotify-demo.json"
+}
+
+steps=("$@"); [ ${#steps[@]} -gt 0 ] || steps=(diff editor guides files search goto git sidebar window usage review ci tools spotify)
 for s in "${steps[@]}"; do
   declare -F "s_$s" >/dev/null || { echo "shoot: no step $s"; exit 1; }
   echo "== $s"; "s_$s"

@@ -40,7 +40,8 @@ quit_sandbox            # close the window and stop its core
 | `build.sh` | The sandbox: stubs for `docker`, `ddev`, `gh` and the programs a mod could start, a fake home with this setup's mods and layout as they are in the working folder, the fake projects, and a copy of this repository as it is committed, with branches, a pull request and uncommitted changes to draw |
 | `launch.sh` | Starts the sandbox's Herdr with a clean environment |
 | `scene.sh` | The scene every picture starts from |
-| `shoot.sh` | The raw shots, in steps: `diff editor guides files search goto git sidebar window usage review ci tools` |
+| `shoot.sh` | The raw shots, in steps: `diff editor guides files search goto git sidebar window usage review ci tools spotify` |
+| `spotify-osascript.sh` | The sandbox substitute for Spotify's macOS scripting helper. The Spotify step stages [Stargazer by Bird of Prey](https://open.spotify.com/track/1gWKIOySPIvxvV3GwGA5Rf), with its public Spotify cover and two fictional pins. It captures the player and both transport states. Other steps see a closed player. |
 | `pictures.json` | Every picture: its canvas, and which parts of which shots go where |
 | `frame.py` | Draws them: the backdrop, each part as a card with rounded corners, a hairline and a shadow |
 | `make.sh` | Runs `frame.py`, then saves each picture as lossless WebP in `docs/images/` |

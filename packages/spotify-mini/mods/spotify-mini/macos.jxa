@@ -1,0 +1,156 @@
+// The notification listener is adapted from jeffarese/herdr-spotify (MIT).
+// Run locally with osascript -l JavaScript macos.jxa <command> [argument].
+ObjC.import("Foundation");
+ObjC.import("AppKit");
+
+const BUNDLE = "com.spotify.client";
+const NOTE = "com.spotify.client.PlaybackStateChanged";
+const workspace = $.NSWorkspace.sharedWorkspace;
+
+function read() {
+  const observed = Date.now();
+  const running = $.NSRunningApplication.runningApplicationsWithBundleIdentifier(BUNDLE);
+  if (!running.count) return { ok: true, running: false, observed };
+  const app = Application(BUNDLE);
+  const playback = String(app.playerState());
+  let track = null;
+  try {
+    const item = app.currentTrack;
+    const id = item.id();
+    if (id) {
+      track = { id, title: item.name(), artist: item.artist() };
+      track.album = item.album();
+      track.art = item.artworkUrl();
+      track.duration = Number(item.duration()) / 1000;
+      track.position = Number(app.playerPosition());
+    }
+  } catch (_) { /* Spotify is open with nothing loaded. */ }
+  return { ok: true, running: true, playing: playback === "playing", paused: playback === "paused",
+    volume: Number(app.soundVolume()), track, observed };
+}
+
+// The image is downloaded only when the panel needs it. Keep eight album covers.
+function cover(url, file) {
+  if (!/^https:\/\/i\.scdn\.co\/image\/[a-f0-9]{40}$/i.test(url)) throw new Error("Unknown artwork URL.");
+  const fm = $.NSFileManager.defaultManager;
+  const dir = $(file).stringByDeletingLastPathComponent;
+  fm.createDirectoryAtPathWithIntermediateDirectoriesAttributesError(dir, true, $(), null);
+  const data = $.NSData.dataWithContentsOfURL($.NSURL.URLWithString(url));
+  if (!data.length || !data.writeToFileAtomically(file, true)) throw new Error("Artwork unavailable.");
+  const entries = ObjC.deepUnwrap(fm.contentsOfDirectoryAtPathError(dir, null)) || [];
+  const files = entries.filter(n => /^[a-f0-9]{40}\.jpg$/.test(n)).map(name => {
+    const path = dir.js + "/" + name;
+    const attrs = fm.attributesOfItemAtPathError(path, null);
+    return { path, time: Number(attrs.fileModificationDate.timeIntervalSince1970) };
+  });
+  for (const old of files.sort((a, b) => b.time - a.time).slice(8)) fm.removeItemAtPathError(old.path, null);
+  return { ok: true };
+}
+
+function sleep(seconds) {
+  $.NSRunLoop.currentRunLoop.runModeBeforeDate($.NSDefaultRunLoopMode, $.NSDate.dateWithTimeIntervalSinceNow(seconds));
+}
+
+function wait(seconds) {
+  let woke = null;
+  ObjC.registerSubclass({
+    name: "SpotifyModWaiter",
+    methods: {
+      "spotify:": { types: ["void", ["id"]], implementation: () => (woke = "spotify") },
+      "app:": {
+        types: ["void", ["id"]],
+        implementation: (note) => {
+          const app = note.userInfo.objectForKey($.NSWorkspaceApplicationKey);
+          if (app && ObjC.unwrap(app.bundleIdentifier) === BUNDLE) woke = ObjC.unwrap(note.name);
+        },
+      },
+    },
+  });
+  const waiter = $.SpotifyModWaiter.alloc.init;
+  $.NSDistributedNotificationCenter.defaultCenter.addObserverSelectorNameObject(waiter, "spotify:", NOTE, $());
+  const ws = $.NSWorkspace.sharedWorkspace.notificationCenter;
+  ws.addObserverSelectorNameObject(waiter, "app:", $.NSWorkspaceDidLaunchApplicationNotification, $());
+  ws.addObserverSelectorNameObject(waiter, "app:", $.NSWorkspaceDidTerminateApplicationNotification, $());
+  const end = Date.now() + Math.max(1, Math.min(300, seconds)) * 1000;
+  while (!woke && Date.now() < end) sleep(Math.min(1, (end - Date.now()) / 1000));
+  // A Spotify that has just opened takes a moment before it answers.
+  if (woke && woke.includes("Launch")) sleep(2);
+  // A Spotify that is quitting still answers as running for a moment.
+  if (woke && woke.includes("Terminate")) return { ok: true, running: false, observed: Date.now() };
+  return read();
+}
+
+
+// Spotify's library toggle is a desktop shortcut. Keep it tied to the track the
+// person saw. Only restore the original app if Spotify still owns the focus.
+function desktopShortcut(command, expected) {
+  const app = Application(BUNDLE);
+  const previous = workspace.frontmostApplication;
+  const front = () => ObjC.unwrap(workspace.frontmostApplication.bundleIdentifier);
+  const checkTrack = () => {
+    let id;
+    try { if (app.running()) id = app.currentTrack.id(); } catch (_) { /* Nothing loaded. */ }
+    if (id !== expected || !/^spotify:track:/.test(expected))
+      throw new Error("The track changed. Try Like on the current track.");
+  };
+  const like = command === "like";
+  if (like) checkTrack();
+  const events = Application("com.apple.systemevents");
+  try {
+    app.activate();
+    const end = Date.now() + 3000;
+    while (front() !== BUNDLE && Date.now() < end) sleep(0.05);
+    if (front() !== BUNDLE) throw new Error("Spotify could not take keyboard focus.");
+    const process = events.applicationProcesses.whose({ bundleIdentifier: BUNDLE })[0];
+    if (like) checkTrack();
+    if (front() !== BUNDLE) throw new Error("Spotify lost keyboard focus.");
+    process.keystroke(like ? "b" : "1", { using: ["option down", "shift down"] });
+    if (like) sleep(0.12);
+  } catch (e) {
+    if (/accessib|assistive|keystrokes|not authorized|-1743|1002/i.test(String(e)))
+      throw new Error("Allow Herdr in Privacy & Security → Accessibility and under Automation → System Events.");
+    throw e;
+  } finally {
+    if (like && front() === BUNDLE && ObjC.unwrap(previous.bundleIdentifier) !== BUNDLE)
+      previous.activateWithOptions($.NSApplicationActivateIgnoringOtherApps);
+  }
+  return { ok: true };
+}
+
+function run(args) {
+  const [command, value, file] = args;
+  try {
+    if (command === "state") return JSON.stringify(read());
+    if (command === "wait") return JSON.stringify(wait(20));
+    if (command === "cover") return JSON.stringify(cover(value, file));
+    if (command === "like" || command === "playlists") return JSON.stringify(desktopShortcut(command, value));
+    const app = Application(BUNDLE);
+    switch (command) {
+      case "toggle":
+        if (app.running()) app.playpause();
+        else {
+          app.launch();
+          const until = Date.now() + 5000;
+          while (!read().track && Date.now() < until) sleep(0.2);
+          app.play();
+        }
+        break;
+      case "previous": app.previousTrack(); break;
+      case "next": app.nextTrack(); break;
+      case "play":
+        if (!app.running() || String(app.playerState()) !== "playing") app.play();
+        break;
+      case "pause":
+        if (app.running() && String(app.playerState()) === "playing") app.pause();
+        break;
+      case "volume": app.soundVolume = Math.max(0, Math.min(100, Math.round(Number(value)))); break;
+      default: throw new Error("Unknown Spotify control.");
+    }
+    return JSON.stringify({ ok: true });
+  } catch (e) {
+    const message = Number(e.errorNumber) === -1743
+      ? "Allow Herdr to control Spotify in Privacy & Security → Automation."
+      : String(e.message || e);
+    return JSON.stringify({ ok: false, error: message });
+  }
+}

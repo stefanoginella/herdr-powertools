@@ -1,0 +1,8 @@
+{
+  "place": "none",
+  "title": "Spotify Mini",
+  "overlay": { "kind": "dialog", "width": 460, "height": 468 },
+  "palette": [
+    { "title": "Spotify Mini", "command": "mod.open", "args": { "name": "spotify-mini" }, "group": "Music", "words": "playback volume like pinned playlists" }
+  ]
+}

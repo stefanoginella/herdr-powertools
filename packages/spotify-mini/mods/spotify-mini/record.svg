@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 164 164">
+  <defs>
+    <linearGradient id="sleeve" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#3d7657"/><stop offset="1" stop-color="#132a26"/>
+    </linearGradient>
+    <linearGradient id="wax" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#171c1b"/><stop offset=".32" stop-color="#4b605a"/><stop offset=".48" stop-color="#171e1c"/><stop offset=".72" stop-color="#293a34"/><stop offset="1" stop-color="#101412"/>
+    </linearGradient>
+  </defs>
+  <rect width="164" height="164" fill="url(#sleeve)"/>
+  <circle cx="82" cy="82" r="73" fill="url(#wax)"/>
+  <g fill="none" stroke="#b6d9c8" stroke-opacity=".18" stroke-width=".7">
+    <circle cx="82" cy="82" r="68"/><circle cx="82" cy="82" r="64"/><circle cx="82" cy="82" r="59"/><circle cx="82" cy="82" r="55"/><circle cx="82" cy="82" r="50"/><circle cx="82" cy="82" r="46"/><circle cx="82" cy="82" r="41"/><circle cx="82" cy="82" r="38"/>
+  </g>
+  <circle cx="82" cy="82" r="25" fill="#c1e7a8"/><path d="M59 72h46a25 25 0 0 0-46 0" fill="#89b79a"/><circle cx="82" cy="82" r="3.5" fill="#172920"/>
+</svg>

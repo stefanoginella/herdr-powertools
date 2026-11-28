@@ -22,6 +22,8 @@ A mode of the whole window for a screenshot or a screen share, in which the name
 
 ## Behavior to preserve
 
+Spotify Mini reads the same flag. Its status item and tooltip say “Spotify” while names are hidden. The opened mini-player shows its music and playlist names.
+
 - A made-up name is a function of the kind and the real string as drawn (trimmed, lower case), and nothing else: no map, no state, nothing written. That is what makes a project the same in the sidebar, the agents list, the pane header, the Usage dialog and a notification. Only `spaces-sidebar`' folder names depend on the other folders (`names.folderNames()`: in the order of their ids, each avoiding the names given before it), so two folders never read the same.
 - Every mod only reads `names.hidden`, in `render()`. It is set only from a click, a key, a command or a task: setting shared state draws every mod.
 - Only what is drawn changes. Ids, the model, the order, sorting, `setAgentOrder`, drag and drop and every comparison (`gitTail()`'s "the name already says it", the agents list's same-label check) use the real names.

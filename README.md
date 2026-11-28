@@ -25,6 +25,7 @@ Each feature has a page with everything it does: every key, limit and edge case.
 | [Project Search](docs/project-search.md) | Search and replace in every file of the project | `project-search` |
 | [Back and Forward](docs/back-forward.md) | Return to the tab and pane you left | `back-and-forward` |
 | [Quick Actions](docs/quick-actions.md) | Run saved commands for the current project | `quick-actions` |
+| [Spotify Mini](docs/spotify-mini.md) | Control the Mac's Spotify player, like a song and open pinned playlists | `spotify-mini` |
 | [Go to File](docs/go-to-file.md) | Any file of the project, by some of its name | `go-to-file` |
 | [File Explorer](docs/file-actions.md) | The Files panel with icons, change marks, drag and drop and search shortcuts | `file-explorer` |
 | [Hide Names](docs/hide-names.md) | Made-up names around the content, for a screenshot or a screen share | `hide-names`, `tabs-names`, `pane-names`, `toast-names` |
@@ -149,6 +150,12 @@ Use the status bar arrows or press a mouse side button over a terminal to return
 
 [Back and Forward](docs/back-forward.md) · [Quick Actions](docs/quick-actions.md)
 
+### Spotify Mini
+
+The status equalizer moves while Spotify plays. Pause keeps the song, artist and controls in place. Long names scroll. **Ctrl+Cmd+P** plays or pauses from a terminal, and **Ctrl+Cmd+M** opens the player with artwork, volume and pinned playlists. Works with the Spotify desktop app on macOS and a Free account. [Spotify Mini controls and setup](docs/spotify-mini.md)
+
+![Spotify Mini with pinned playlists and the status-bar controls](docs/images/spotify-mini.webp)
+
 ## The same everywhere
 
 Three things hold for every feature, so the pages don't repeat them:
@@ -168,6 +175,7 @@ All in `keys.json`. A feature's page says what each key does; this is what to co
 | Project Search | the sections `mod:project-search` and `mod:project-search > Input`, and `cmd-shift-f`, `f4`, `shift-f4` from `global` |
 | Go to File | the section `mod:go-to-file > Input`, and `cmd-o` from `global` |
 | Quick Actions | `alt-q` from `global` |
+| Spotify Mini | The `spotify-mini` actions in `global` (Ctrl+Cmd with M, P, arrows or L) |
 | Hide Names | `cmd-shift-h` from `global` |
 | Usage | `cmd-shift-u` from `global` |
 | Jumping to an agent | `cmd-alt-1` to `cmd-alt-9` from `global` |
@@ -247,4 +255,4 @@ The checkout can itself be the Herdr app home. The runtime mods, Herdr's shipped
 
 ## License
 
-Herdr Power Tools and the parts derived from Herdr are Apache-2.0. The bundled Material Icon Theme icons, Back and Forward, and Quick Actions are MIT. [LICENSE](LICENSE) · [NOTICE](NOTICE)
+Herdr Power Tools and the parts derived from Herdr are Apache-2.0. The bundled Material Icon Theme icons, Back and Forward, Quick Actions and the macOS notification listener adapted for Spotify Mini are MIT. [LICENSE](LICENSE) · [NOTICE](NOTICE)
